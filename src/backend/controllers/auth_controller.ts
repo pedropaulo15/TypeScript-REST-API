@@ -31,21 +31,18 @@ export function getHandlers(_userRepository: Repository<User>) {
                     } else {
                         res.status(500).send();
                     }
-                    
                 }
             }
         })();
     };
-
     return {
         getTokenHandler
     };
-
 }
 
 export function getAuthRouter() {
     const handlers = getHandlers(getRepository());
     const authRouter = Router();
-    authRouter.post("/", handlers.getTokenHandler);
+    authRouter.post("/api/v1/auth/login", handlers.getTokenHandler);
     return authRouter;
 }

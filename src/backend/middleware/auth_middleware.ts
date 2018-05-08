@@ -38,3 +38,13 @@ export function authMiddleware(
         res.status(500).send();
     }
 }
+
+// docker run --name POSTGRES_USER -p "$DATABASE_PORT":5432 \ -e POSTGRES_PASSWORD=secret \
+// -e POSTGRES_USER=postgres \
+// -e POSTGRES_DB=demo \
+// -d postgres
+
+// export DATABASE_USER=postgres \
+// export DATABASE_PASSWORD=secret \ export DATABASE_HOST=localhost \ export DATABASE_PORT=5432 \ export DATABASE_DB=demo
+
+// docker run --name POSTGRES_USER -p DATABASE_PORT:$DATABASE_PORT \ -e POSTGRES_PASSWORD=$DATABASE_PASSWORD \ -e POSTGRES_USER=$DATABASE_USER \ -e POSTGRES_DB=$DATABASE_DB \ -d postgres

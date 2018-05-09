@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
 import { User } from "./user";
+import { Vote } from "./vote";
 
 @Entity()
 export class Link {
@@ -9,6 +10,9 @@ export class Link {
 
    @ManyToOne(type => User, user => user.id)
    public user: User;
+
+   @ManyToOne(type => Vote, vote => vote.id)
+   public vote: Vote;
 
    @Column()
    public url: string;

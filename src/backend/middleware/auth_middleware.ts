@@ -1,6 +1,7 @@
-import express from "express";
-import jwt from "jsonwebtoken";
 
+import * as jwt from "jsonwebtoken";
+import { getRepository } from '../repositories/user_repository';
+import * as express from "express";
 export function authMiddleware(
     req: express.Request,
     res: express.Response,

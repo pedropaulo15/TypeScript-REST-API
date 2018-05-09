@@ -2,12 +2,12 @@ import { Router, Request, Response } from "express";
 import { getRepository } from '../repositories/link_repository';
 import { Link } from "../entities/link";
 import { Repository } from "typeorm";
-//import { authMiddleware } from "";
+import { authMiddleware } from "../middleware/auth_middleware";
 
 // Handle Errors
 const linkRouter = Router();
 
-linkRouter.get("/", function (req, res) {
+linkRouter.get("/api/v1/links", function (req, res) {
     const linkRepository = getRepository();
     linkRepository.find().then((link) => {
         res.json(link);
@@ -17,7 +17,7 @@ linkRouter.get("/", function (req, res) {
     });
 });
 
-linkRouter.post("/", function (req, res) {
+linkRouter.post("/api/v1/links", function (req, res) {
     const linkRepository = getRepository();
     const newLink = req.body;
     if(typeof newLink.title === "string"){
@@ -85,11 +85,18 @@ export function getHandlers(_linkRepository: Repository<Link>) {
 export function getLinksRouter() {
     const handlers = getHandlers(getRepository());
     const linkRouter = Router();
+    // Returns all links
     linkRouter.get("/api/v1/links", handlers.getAllLinksHandler); // public
-    //movieRouter.post("/api/v1/links", authMiddleware, handlers.createLink); // private
-    //movieRouter.delete("/api/v1/links/:id", authMiddleware, handlers.deleteLink); // private
-    //movieRouter.post("/api/v1/links/:id/upvote", authMiddleware, handlers.createLink); // private
-    //movieRouter.post("/api/v1/links/:id/downvote", authMiddleware, handlers.createLink); // private
-    linkRouter.get("/:id", handlers.getLinkByIdHandler); // public
+    // Creates a new link
+    linkRouter.post("/api/v1/links", authMiddleware, handlers.createLink); // private
+    // Deletes a link by ID
+    linkRouter.delete("/api/v1/links/:id", authMiddleware, handlers.deleteLink); // private
+    // Upvotes link
+    linkRouter.post("/api/v1/links/:id/upvote", authMiddleware, handlers.createLink); // private
+    // Downvotes link
+    linkRouter.post("/api/v1/links/:id/downvote", authMiddleware, handlers.createLink); // private
+    // Returns a link by ID
+    linkRouter.get("/api/v1/links/:id", handlers.getLinkByIdHandler); // public
+    
     return linkRouter;
 }

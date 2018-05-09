@@ -11,6 +11,9 @@ export class Vote {
    @ManyToOne(type => User, user => user.id)
    public user: User;
 
+   @ManyToOne(type => Vote, vote => vote.id)
+   public vote: Vote;
+
    @Column()
    public isUpvote: boolean;
 }

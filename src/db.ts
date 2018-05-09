@@ -8,7 +8,7 @@ export async function connecToDatabase() {
     const DATABASE_HOST = "localhost";
     const DATABASE_USER = "postgres";
     const DATABASE_PORT = 5432;
-    const DATABASE_PASSWORD = "password";
+    const DATABASE_PASSWORD = "secret";
     const DATABASE_DB = "demo";
 
     const entities = [

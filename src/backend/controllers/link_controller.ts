@@ -20,7 +20,7 @@ linkRouter.get("/api/v1/links", function (req, res) {
 linkRouter.post("/api/v1/links", function (req, res) {
     const linkRepository = getRepository();
     const newLink = req.body;
-    if(typeof newLink.title === "string"){
+    if(!(typeof newLink.title === "string")){
         res.status(400);
         res.send(`Invalid Link!`);
     }

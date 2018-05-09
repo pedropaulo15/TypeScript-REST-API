@@ -1,9 +1,8 @@
-import * as express from "express";
+import express from "express";
 import * as bodyParser from "body-parser";
 import { getLinksRouter } from "./backend/controllers/link_controller";
 import { getAuthRouter } from "./backend/controllers/auth_controller";
 import { userRouter } from "./backend/controllers/user_controller";
-import { voteRouter } from "./backend/controllers/vote_controller";
 
 export async function getApp() {
 

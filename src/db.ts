@@ -32,10 +32,13 @@ export async function connecToDatabase() {
     const movieRepository = conn.getRepository(User);
 
     // INSERT INTO movies VALUES ('Star Wars: Episode IV – A New Hope', 1977)
-    await movieRepository.save({
-        email: "firstUser@test.com",
-        password: "password" 
-    });
+    // await movieRepository.save({
+    //     email: "firstUser@test.com",
+    //     password: "password" 
+    // });
+
+    linkRepository.save({ title: title, url: url, user: { id: userId } });
+
 
     // SELECT * FROM movies WHERE year=1977
     const firstUser = await movieRepository.findOne({

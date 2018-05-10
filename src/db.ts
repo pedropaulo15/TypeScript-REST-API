@@ -28,4 +28,20 @@ export async function connecToDatabase() {
         synchronize: true
     });
 
+    const getRepository = (entity: Function) => conn.getRepository(entity);
+    const movieRepository = conn.getRepository(User);
+
+    // INSERT INTO movies VALUES ('Star Wars: Episode IV – A New Hope', 1977)
+    await movieRepository.save({
+        email: "firstUser@test.com",
+        password: "password" 
+    });
+
+    // SELECT * FROM movies WHERE year=1977
+    const firstUser = await movieRepository.findOne({
+        email: "firstUser@test.com" 
+    });
+        if (firstUser) { 
+            console.log(`User ${firstUser.email} inserted into the User table.`);
+        }
 }

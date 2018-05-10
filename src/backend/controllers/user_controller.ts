@@ -6,7 +6,7 @@ import { authMiddleware } from "../middleware/auth_middleware";
 
 export function getHandlers(_userRepository: Repository<User>) {
     
-    // creating user
+    // Create user
     const createUser = (req: Request, res: Response) => {
         (async () => {
             // getting values from request
@@ -28,7 +28,7 @@ export function getHandlers(_userRepository: Repository<User>) {
                     const newUser = await _userRepository.save({ email: email, password: password});
                     return res.json(newUser);
                 }
-                // If it does, bad request
+                // If it does, return 400 - Bad request
                 else {
                     res.status(400).send();
                 }
@@ -36,6 +36,7 @@ export function getHandlers(_userRepository: Repository<User>) {
         })();
     };
 
+    // Return all Users
     const getAllUsersHandler = (req: Request, res: Response) => {
         (async () => {
             const users = await _userRepository.find();
@@ -43,6 +44,7 @@ export function getHandlers(_userRepository: Repository<User>) {
         })();
     };
 
+    // Return user by User ID
     const getUserByIdHandler = (req: Request, res: Response) => {
         const id = parseInt(req.params.id);
         const user = _userRepository.findOne({
@@ -57,6 +59,7 @@ export function getHandlers(_userRepository: Repository<User>) {
         res.json(user).send();
     };
 
+    // Delete a User
     const deleteUser =  (req: Request, res: Response) => {
         (async () => {
             const userId = req.params.id;

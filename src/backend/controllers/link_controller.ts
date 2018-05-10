@@ -9,6 +9,7 @@ import { authMiddleware } from "../middleware/auth_middleware";
 // Handle HTTP requests
 export function getHandlers(_linkRepository: Repository<Link>, _voteRepository: Repository<Vote>) {
     
+    // GET all links
     const getAllLinksHandler = (req: Request, res: Response) => {
         (async () => {
             const links = await _linkRepository.find();
@@ -16,6 +17,7 @@ export function getHandlers(_linkRepository: Repository<Link>, _voteRepository: 
         })();
     };
     
+    // GET link bt ID
     const getLinkByIdHandler = (req: Request, res: Response) => {
         const id = parseInt(req.params.id);
         const link = _linkRepository.findOne({
@@ -30,6 +32,7 @@ export function getHandlers(_linkRepository: Repository<Link>, _voteRepository: 
         res.json(link).send();
     };
 
+    // POST create a new link
     const createLink = (req: Request, res: Response) => {
         (async () => {
             const user = (req as any).user;
@@ -45,6 +48,7 @@ export function getHandlers(_linkRepository: Repository<Link>, _voteRepository: 
         })();
     };
 
+    // DELETE a link by ID
     const deleteLink =  (req: Request, res: Response) => {
         (async () => {
             const linkId = req.params.id;
@@ -60,7 +64,7 @@ export function getHandlers(_linkRepository: Repository<Link>, _voteRepository: 
             if (link === undefined){
                 res.status(404).send(`Link not found.`);
             } else {
-                // Perform action if everything goes well
+                // Delete the link
                 const link = _linkRepository.deleteById(linkId);
                 // Return an empty json
                 res.json({});
@@ -68,19 +72,19 @@ export function getHandlers(_linkRepository: Repository<Link>, _voteRepository: 
         })();
     };
 
-    // upvote a link
+    // Upvote a link
     const upvoteLink = (req: Request, res: Response) => {
         (async () => {
             const linkId = req.params.id;
             const userId = (req as any).userId;
-            // This time using the vote repository to look for the entry
+            // This time using the vote repository
             const foundVote = await _voteRepository.findOne({
                 where: {
                     user: userId,
                     link: linkId,
                 }
             });
-            // If not found, add it!
+            // Add if not found!
             if (foundVote === undefined){
                 const newVote = await _voteRepository.save({ user: {id: userId}, isUpvote: true , link: {id: linkId} });
                 res.json(newVote);
@@ -100,7 +104,7 @@ export function getHandlers(_linkRepository: Repository<Link>, _voteRepository: 
         })(); 
     }
 
-    // downvote a link
+    // Downvote a link
     const downvoteLink = (req: Request, res: Response) => {
         (async () => {
             const linkId = req.params.id;

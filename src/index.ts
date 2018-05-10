@@ -2,6 +2,7 @@ import "reflect-metadata";
 import { getApp } from "./app";
 import { connecToDatabase } from "./db";
 
+// Starting point
 (async function() {
     await connecToDatabase();
     const port = 3000;

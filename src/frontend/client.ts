@@ -1,3 +1,5 @@
+// First try of fetch implementation
+
 // function createLink(){
 //     fetch("api/v1/links/", { method: "GET", body: JSON.stringify({}) }).then(response => {
 //         response.json().then(json => {
@@ -7,6 +9,7 @@
 //     console.log("Hello from Client.ts");
 // }
 
+// Second try of fetch implementation
 fetch(
     "/api/v1/links/",
     {

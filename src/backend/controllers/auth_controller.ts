@@ -11,6 +11,7 @@ export function getHandlers(_userRepository: Repository<User>) {
             const body = req.body;
             const email = body.email;
             const password = body.password;
+            // Check email password and email is not null
             if (!email || !password) {
                 res.status(400).send();
             } else {

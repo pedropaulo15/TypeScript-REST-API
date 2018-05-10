@@ -2,7 +2,7 @@ import express from "express";
 import * as bodyParser from "body-parser";
 import { getLinksRouter } from "./backend/controllers/link_controller";
 import { getAuthRouter } from "./backend/controllers/auth_controller";
-import { userRouter } from "./backend/controllers/user_controller";
+import { getUserRouter } from "./backend/controllers/user_controller";
 
 export async function getApp() {
 
@@ -17,8 +17,7 @@ export async function getApp() {
     // Configure controllers
     app.use("/api/v1/links", getLinksRouter());
     app.use("/api/v1/auth", getAuthRouter());
-    app.use("/api/v1/users", userRouter);
-    // app.use("/", voteRouter);
+    app.use("/api/v1/users/", getUserRouter());
 
     return app;
 }

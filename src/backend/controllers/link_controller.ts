@@ -1,41 +1,13 @@
 import { Router, Request, Response } from "express";
 import { getRepository } from '../repositories/link_repository';
+import { getVoteRepository } from '../repositories/vote_repository';
 import { Link } from "../entities/link";
+import { Vote } from "../entities/vote";
 import { Repository } from "typeorm";
 import { authMiddleware } from "../middleware/auth_middleware";
 
-// Handle Errors
-const linkRouter = Router();
-
-linkRouter.get("/api/v1/links", function (req, res) {
-    const linkRepository = getRepository();
-    linkRepository.find().then((link) => {
-        res.json(link);
-    }).catch((e: Error) => {
-        res.status(500);
-        res.send(e.message);
-    });
-});
-
-linkRouter.post("/api/v1/links", function (req, res) {
-    const linkRepository = getRepository();
-    const newLink = req.body;
-    if(!(typeof newLink.title === "string")){
-        res.status(400);
-        res.send(`Invalid Link!`);
-    }
-    linkRepository.find(newLink).then((link) => {
-        res.json(link);
-    }).catch((e: Error) => {
-        res.status(500);
-        res.send(e.message);
-    });
-});
-
-export { linkRouter };
-
 // Handle HTTP requests
-export function getHandlers(_linkRepository: Repository<Link>) {
+export function getHandlers(_linkRepository: Repository<Link>, _voteRepository: Repository<Vote>) {
     
     const getAllLinksHandler = (req: Request, res: Response) => {
         (async () => {
@@ -51,6 +23,7 @@ export function getHandlers(_linkRepository: Repository<Link>) {
                 id: id
             }
         });
+        res.json(link).send();
         if (link === undefined) {
             res.status(404).send();
         }
@@ -59,31 +32,118 @@ export function getHandlers(_linkRepository: Repository<Link>) {
 
     const createLink = (req: Request, res: Response) => {
         (async () => {
+            const user = (req as any).user;
             const title = req.body.title;
-            if (!title) {
-                res.status(400).send();
+            const url = req.body.url;
+            if (!title || !url || !user) {
+                res.status(400)
+                res.send(`Bad Request - Missing paramenter.`);
             } else {
-                const newLink = await _linkRepository.save({ title: title});
+                const newLink = await _linkRepository.save({ title: title, url: url, user: { id: user } });
                 return res.json(newLink);
             }            
         })();
     };
 
     const deleteLink =  (req: Request, res: Response) => {
-        // TODO
-        res.json({});
+        (async () => {
+            const linkId = req.params.id;
+            const userId = (req as any).userId;
+
+            const link = await _linkRepository.findOne({
+                where: {
+                    id: linkId,
+                    user: userId
+                }
+            });
+
+            if (link === undefined){
+                res.status(404).send(`Link not found.`);
+            } else {
+                // Perform action if everything goes well
+                const link = _linkRepository.deleteById(linkId);
+                // Return an empty json
+                res.json({});
+            }
+        })();
     };
+
+    // upvote a link
+    const upvoteLink = (req: Request, res: Response) => {
+        (async () => {
+            const linkId = req.params.id;
+            const userId = (req as any).userId;
+            // This time using the vote repository to look for the entry
+            const foundVote = await _voteRepository.findOne({
+                where: {
+                    user: userId,
+                    link: linkId,
+                }
+            });
+            // If not found, add it!
+            if (foundVote === undefined){
+                const newVote = await _voteRepository.save({ user: {id: userId}, isUpvote: true , link: {id: linkId} });
+                res.json(newVote);
+            }
+            // If found, verify if it is upvoted or not
+            else{
+                // if it is upvoted, complain
+                if ((foundVote as any).isUpvote){
+                    res.status(400).send();
+                }
+                // otherwise, update!
+                else {
+                    (foundVote as any).isUpvote = true; 
+                    res.json(await _voteRepository.save(foundVote));
+                }
+            }
+        })(); 
+    }
+
+    // downvote a link
+    const downvoteLink = (req: Request, res: Response) => {
+        (async () => {
+            const linkId = req.params.id;
+            const userId = (req as any).userId;
+            // This time using the vote repository to look for the entry
+            const foundVote = await _voteRepository.findOne({
+                where: {
+                    user: userId,
+                    link: linkId,
+                }
+            });
+            // If not found, add it!
+            if (foundVote === undefined){
+                const newVote = await _voteRepository.save({ user: {id: userId}, isUpvote: false , link: {id: linkId} });
+                res.json(newVote);
+            }
+            // If found, verify if it is upvoted or not
+            else{
+                // if it is downvoted, complain
+                if ((foundVote as any).isUpvote){
+                    (foundVote as any).isUpvote = false; 
+                    res.json(await _voteRepository.save(foundVote));
+                }
+                // otherwise, update!
+                else {
+                    res.status(400).send();
+                }
+            }
+        })(); 
+    }
 
     return {
         getAllLinksHandler,
         getLinkByIdHandler,
         createLink,
-        deleteLink
+        deleteLink,
+        upvoteLink,
+        downvoteLink
     };
 }
 
 export function getLinksRouter() {
-    const handlers = getHandlers(getRepository());
+    const handlers = getHandlers(getRepository(), getVoteRepository() );
     const linkRouter = Router();
     // Returns all links
     linkRouter.get("/", handlers.getAllLinksHandler); // public
@@ -92,11 +152,11 @@ export function getLinksRouter() {
     // Deletes a link by ID
     linkRouter.delete("/:id", authMiddleware, handlers.deleteLink); // private
     // Upvotes link
-    linkRouter.post("/:id/upvote", authMiddleware, handlers.createLink); // private
+    linkRouter.post("/:id/upvote", authMiddleware, handlers.upvoteLink); // private
     // Downvotes link
-    linkRouter.post("/:id/downvote", authMiddleware, handlers.createLink); // private
+    linkRouter.post("/:id/downvote", authMiddleware, handlers.downvoteLink); // private
     // Returns a link by ID
-    linkRouter.get("/:id", handlers.getLinkByIdHandler); // public
+    linkRouter.get("/:id/", handlers.getLinkByIdHandler); // public
     
     return linkRouter;
 }

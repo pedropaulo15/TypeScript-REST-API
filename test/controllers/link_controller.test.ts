@@ -10,10 +10,7 @@ describe("MovieController", () => {
     it("HTTP GET /", async () => {
 
         // Integration Test
-        const expected = [
-            { id: 1, url: "url/test/iwa/typescript", title: "title" },
-            { id: 3, url: "url/test/iwa/typescript", title: "title" }
-        ];
+        const expected = [];
 
         const app = await getApp();
 
@@ -29,10 +26,8 @@ describe("MovieController", () => {
 
     it("linkRouter.get", () => {
 
-        const expected = [
-            { id: 1, url: "url/test/iwa/typescript", title: "title" },
-            { id: 3, url: "url/test/iwa/typescript", title: "title" }
-        ];
+        const expected = [];
+        
         const fakeReq: any = {};
         const fakeResponse: any = {
             json: (links: any[]) => {

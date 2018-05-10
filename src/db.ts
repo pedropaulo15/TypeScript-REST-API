@@ -27,29 +27,4 @@ export async function connecToDatabase() {
         entities: entities,
         synchronize: true
     });
-
-    // const getRepository = (entity: Function) => conn.getRepository(entity);
-
-    //const movieRepository = conn.getRepository(User);
-    // await movieRepository.save({
-    //     email: "firstUser@test.com",
-    //     password: "password" 
-    // });
-
-    // const linkRepository = conn.getRepository(Link);
-    // await linkRepository.save({ 
-    //     title: "title", 
-    //     url: "url/test/iwa/typescript", 
-    //     user: { id: 3 } ,
-    //     //vote: { id: 1 }
-    // });
-
-    // // SELECT * FROM movies WHERE year=1977
-    // const firstLink = await linkRepository.findOne({
-    //     user: { id: 2 } 
-    // });
-
-    // if (firstLink) { 
-    //     console.log(`User ${firstLink.title} inserted into the User table.`);
-    // }
 }

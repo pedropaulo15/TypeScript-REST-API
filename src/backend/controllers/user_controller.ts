@@ -6,7 +6,7 @@ import * as jwt from "jsonwebtoken";
 
 const userRouter = Router();
 // Retruns all users
-userRouter.get("/api/v1/users", function (req, res) {
+userRouter.get("/", function (req, res) {
     const userRepository = getRepository();
     userRepository.find().then((user) => {
         res.json(user);
@@ -17,7 +17,7 @@ userRouter.get("/api/v1/users", function (req, res) {
 });
 
 // Creates a new user account
-userRouter.post("/api/v1/users", function (req, res) {
+userRouter.post("/", function (req, res) {
     const userRepository = getRepository();
     const newUser = req.body;
     if(!(typeof newUser.email === "string" || typeof newUser.password === "string")){

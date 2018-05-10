@@ -28,23 +28,28 @@ export async function connecToDatabase() {
         synchronize: true
     });
 
-    const getRepository = (entity: Function) => conn.getRepository(entity);
-    const movieRepository = conn.getRepository(User);
+    // const getRepository = (entity: Function) => conn.getRepository(entity);
 
-    // INSERT INTO movies VALUES ('Star Wars: Episode IV – A New Hope', 1977)
+    //const movieRepository = conn.getRepository(User);
     // await movieRepository.save({
     //     email: "firstUser@test.com",
     //     password: "password" 
     // });
 
-    linkRepository.save({ title: title, url: url, user: { id: userId } });
+    // const linkRepository = conn.getRepository(Link);
+    // await linkRepository.save({ 
+    //     title: "title", 
+    //     url: "url/test/iwa/typescript", 
+    //     user: { id: 3 } ,
+    //     //vote: { id: 1 }
+    // });
 
+    // // SELECT * FROM movies WHERE year=1977
+    // const firstLink = await linkRepository.findOne({
+    //     user: { id: 2 } 
+    // });
 
-    // SELECT * FROM movies WHERE year=1977
-    const firstUser = await movieRepository.findOne({
-        email: "firstUser@test.com" 
-    });
-        if (firstUser) { 
-            console.log(`User ${firstUser.email} inserted into the User table.`);
-        }
+    // if (firstLink) { 
+    //     console.log(`User ${firstLink.title} inserted into the User table.`);
+    // }
 }

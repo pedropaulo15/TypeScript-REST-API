@@ -44,6 +44,6 @@ export function getAuthRouter() {
     const handlers = getHandlers(getRepository());
     const authRouter = Router();
     // Returns an auth token
-    authRouter.post("/api/v1/auth/login", handlers.getTokenHandler);
+    authRouter.post("/login/", handlers.getTokenHandler);
     return authRouter;
 }

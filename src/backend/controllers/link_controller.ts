@@ -86,17 +86,17 @@ export function getLinksRouter() {
     const handlers = getHandlers(getRepository());
     const linkRouter = Router();
     // Returns all links
-    linkRouter.get("/api/v1/links", handlers.getAllLinksHandler); // public
+    linkRouter.get("/", handlers.getAllLinksHandler); // public
     // Creates a new link
-    linkRouter.post("/api/v1/links", authMiddleware, handlers.createLink); // private
+    linkRouter.post("/", authMiddleware, handlers.createLink); // private
     // Deletes a link by ID
-    linkRouter.delete("/api/v1/links/:id", authMiddleware, handlers.deleteLink); // private
+    linkRouter.delete("/:id", authMiddleware, handlers.deleteLink); // private
     // Upvotes link
-    linkRouter.post("/api/v1/links/:id/upvote", authMiddleware, handlers.createLink); // private
+    linkRouter.post("/:id/upvote", authMiddleware, handlers.createLink); // private
     // Downvotes link
-    linkRouter.post("/api/v1/links/:id/downvote", authMiddleware, handlers.createLink); // private
+    linkRouter.post("/:id/downvote", authMiddleware, handlers.createLink); // private
     // Returns a link by ID
-    linkRouter.get("/api/v1/links/:id", handlers.getLinkByIdHandler); // public
+    linkRouter.get("/:id", handlers.getLinkByIdHandler); // public
     
     return linkRouter;
 }

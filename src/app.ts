@@ -17,7 +17,7 @@ export async function getApp() {
     // Configure controllers
     app.use("/api/v1/links", getLinksRouter());
     app.use("/api/v1/auth", getAuthRouter());
-    app.use("/api/v1/users/", getUserRouter());
+    app.use("/api/v1/users", getUserRouter());
 
     return app;
 }

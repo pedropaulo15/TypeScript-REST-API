@@ -152,7 +152,7 @@ export function getLinksRouter() {
     // Returns all links
     linkRouter.get("/", handlers.getAllLinksHandler); // public
     // Creates a new link
-    linkRouter.post("/", authMiddleware, handlers.createLink); // private
+    linkRouter.post("/", handlers.createLink); // private
     // Deletes a link by ID
     linkRouter.delete("/:id", authMiddleware, handlers.deleteLink); // private
     // Upvotes link

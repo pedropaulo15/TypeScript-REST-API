@@ -12,6 +12,7 @@ export function getHandlers(_userRepository: Repository<User>) {
             // getting values from request
             const email= req.body.email;
             const password = req.body.password;
+            console.log(`Email: ${email}, Password ${password}`);
             if (!password || !email) {
                 res.status(400).send();
             } 
@@ -52,7 +53,7 @@ export function getHandlers(_userRepository: Repository<User>) {
                 id: id
             }
         });
-        res.json(user).send();
+        
         if (user === undefined) {
             res.status(404).send();
         }
@@ -94,9 +95,9 @@ export function getUserRouter() {
     const handlers = getHandlers(getRepository());
     const userRouter = Router();
 
-    userRouter.post("/", authMiddleware, handlers.createUser); // public
-    userRouter.get("/:id", handlers.getAllUsersHandler); // public
+    userRouter.post("/", handlers.createUser); // private
     userRouter.get("/", handlers.getAllUsersHandler); // public
+    userRouter.get("/:id", handlers.getUserByIdHandler); // public
     userRouter.delete("/:id", authMiddleware, handlers.deleteUser); // private
 
     return userRouter;
